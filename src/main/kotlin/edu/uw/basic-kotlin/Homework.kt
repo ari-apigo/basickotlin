@@ -17,7 +17,7 @@ fun whenFn(a: Any): String {
         if (a == "Hello") {
             return "world"
         } else {
-            return "I don't understand"
+            return "Say what?"
         }
     } else if (a is Int) {
         if (a == 0) {
@@ -52,7 +52,7 @@ fun mathOp(a: Int, b: Int, body: (Int, Int) -> Int): Int {
 
 // write a class "Person" with first name, last name and age
 class Person(var firstName: String, var lastName: String, var age: Int) {
-    val debugString: String = "Person $firstName $lastName $age"
+    val debugString: String = "[Person firstName:$firstName lastName:$lastName age:$age]"
 }
 
 // write a class "Money" with amount and currency, and define a convert() method and the "+" operator
@@ -63,8 +63,8 @@ class Money(val amount: Int, val currency: String) {
         if (this.currency !in currencies) throw IllegalArgumentException()
     }
     fun convert(toCurrency: String): Money {
-        if (this.currency == "USD") {
-            when (toCurrency) {
+        if (this.currency == "USD") { // first currency
+            when (toCurrency) { // second currency
                 "GBP" -> return Money(this.amount / 2, toCurrency)
                 "EUR" -> return Money((this.amount * 1.5).roundToInt(), toCurrency)
                 "CAN" -> return Money((this.amount * 1.25).roundToInt(), toCurrency)
@@ -93,8 +93,9 @@ class Money(val amount: Int, val currency: String) {
 
     operator fun plus(other: Money): Money {
         if (this.currency != other.currency) {
-            return Money(this.amount + convert(other.currency).amount, this.currency)
+            return Money(this.amount + other.convert(this.currency).amount, this.currency)
+        } else {
+            return Money(this.amount + other.amount, this.currency)
         }
-        return Money(this.amount + other.amount, this.currency)
     }
 }
